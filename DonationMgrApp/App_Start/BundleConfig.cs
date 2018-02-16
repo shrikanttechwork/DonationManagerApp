@@ -27,6 +27,12 @@ namespace DonationMgrApp
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+            // Create bundel for jQueryUI
+            // js
+            bundles.Add(new ScriptBundle("~/bundels/jqueryui").Include("~/Scripts/jquery-ui-{version}.js"));
+
+            //css
+            bundles.Add(new StyleBundle("~/Content/jqueryui").Include("~/Content/themes/base/all.css"));
         }
     }
 }

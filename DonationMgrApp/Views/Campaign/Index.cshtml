@@ -1,0 +1,91 @@
+﻿@model PagedList.IPagedList<DonationMgrApp.Models.Campaign>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<div class="row">
+    <div class="col-xs-3 col-sm-3 col-lg-6">
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-lg-6">
+        @using (Html.BeginForm())
+            {
+            <p class="pull-right">
+                Search Name: @Html.TextBox("Search_Data", ViewBag.FilterValue as string)
+                <input type="submit" name="name" value="Find" />
+            </p>
+        }
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th>
+            @Html.ActionLink("Id", "Index", new { Sorting_Order = ViewBag.SortingId })
+        </th>
+        <th>
+            @Html.ActionLink("Name", "Index", new { Sorting_Order = ViewBag.SortingName })
+        </th>
+        <th>
+            @Html.ActionLink("Date", "Index", new { Sorting_Order = ViewBag.SortingDate })
+        </th>
+        <th>
+            @Html.ActionLink("OrgName", "Index", new { Sorting_Order = ViewBag.SortingOrgName })
+        </th>
+        <th>Actions</th>
+    </tr>
+    @{ int rowNo = 0; }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @( rowNo += 1 )
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CampaignName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Organisation.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Campid }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Campid }) |
+                <a href="" data-id="@item.Campid" class="deleteCamp">Delete</a>
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, Page_No => Url.Action("Index", new { Page_No, Sorting_Order = ViewBag.CurrentSortOrder, Filter_value = ViewBag.FilterValue }))
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval") 
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $(".deleteCamp").click(function () {
+                    var campid = $(this).attr("data-id");
+                    if (campid != '') {
+                        if (confirm('Are you sure you want to delete record?')) {
+                            $.post("/Campaign/Delete", { "id": campid }, function (data) {
+                                if (data) {
+                                    window.location.href = '/Campaign/Index';
+                                    alert("Record has been deleted successfully.");
+                                } 
+                            }); 
+                        }
+                    }
+                });
+            });
+    </script>
+}

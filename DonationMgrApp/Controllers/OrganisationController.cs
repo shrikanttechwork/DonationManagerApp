@@ -28,7 +28,6 @@ namespace DonationMgrApp.Controllers
 
             ViewBag.Filter_Value = Search_Data;
 
-            //var orgs = dbcon.Organisations.ToList();
             var orgs = from org in dbcon.Organisations select org;
 
             if (!string.IsNullOrEmpty(Search_Data))
@@ -49,16 +48,18 @@ namespace DonationMgrApp.Controllers
                     break;
             }
 
-            int Size_Of_Page = 10;
+            int Size_Of_Page = 5;
             int No_Of_Page = (Page_No ?? 1);
             return View(orgs.ToPagedList(No_Of_Page, Size_Of_Page));
         }
 
+        // GET - Create method
         public ActionResult Create()
         {
             return View();
         }
 
+        // POST - Create method
         [HttpPost]
         public ActionResult Create(Organisation org)
         {
@@ -71,12 +72,14 @@ namespace DonationMgrApp.Controllers
             return View();
         }
 
+        // GET - Edit method
         public ActionResult Edit(int id)
         {
             Organisation ogr = dbcon.Organisations.Find(id);
             return View(ogr);
         }
 
+        // POST - Edit method
         [HttpPost]
         public ActionResult Edit(Organisation ogr)
         {
@@ -90,12 +93,14 @@ namespace DonationMgrApp.Controllers
             return View(ogr);
         }
 
+        // GET - Details method
         public ActionResult Details(int id)
         {
             Organisation ogr = dbcon.Organisations.Find(id);
             return View(ogr);
         }
 
+        // POST - Delete method
         [HttpPost]
         public JsonResult Delete(int id)
         {
